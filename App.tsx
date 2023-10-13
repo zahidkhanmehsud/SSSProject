@@ -47,7 +47,7 @@ function App() {
         <Stack.Screen name="ParentNewCard" component={ParentNewCard} options={{ headerShown: false }} />
         <Stack.Screen name="ParentLeave" component={ParentLeave} options={{ headerShown: false }} />
         <Stack.Screen name="ParentCheckStatus" component={ParentCheckStatus} options={{ headerShown: false }} />
-        {/* Security Officer Page */}
+        {/* Security Officer */}
       </Stack.Navigator>
     </NavigationContainer>
   );
