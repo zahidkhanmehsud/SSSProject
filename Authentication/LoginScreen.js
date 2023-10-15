@@ -12,6 +12,7 @@ function LoginScreen(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedElement, setSelectedElement] = useState(null);
+ 
 
   const elements = [
     { id: 'Parent', icon: 'user', text: 'Parent' },
@@ -67,7 +68,19 @@ function LoginScreen(props) {
 
    function parentLogin()
    {
-    props.navigation.replace('ParentDashboard');
+    // props.navigation.replace('ParentDashboard');
+
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+
+      
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      alert(errorMessage);
+    });
+
 
    }
 
@@ -113,6 +126,47 @@ function LoginScreen(props) {
         console.error(error);
       });
   }
+
+
+  function getChildData(UID) {
+    const dbRef = ref(getDatabase());
+
+    get(child(dbRef, `StudentData/`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          snapshot.forEach((childSnapshot) => {
+            const data = childSnapshot.val();
+            const id = data.ID;
+            const firstName = data.firstname;
+            const lastName = data.lastname;
+            const newUid = data.uid;
+
+            if (UID == newUid) {
+              const session = {
+                email,
+                password,
+                uid: UID,
+                CardID: id,
+              };
+              AsyncStorage.setItem('userSession', JSON.stringify(session))
+                .then(() => {
+                  alert('Login Successful');
+                  props.navigation.replace('teacherDashboard');
+                })
+                .catch((error) => {
+                  console.log('Error saving session:', error);
+                });
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+
+     
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
